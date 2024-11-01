@@ -1,0 +1,21 @@
+{
+    "name": "axi/mycalendar-bundle",
+    "description": "Symfony bundle for axi/mycalendar package",
+    "license": "GPL-3.0-or-later",
+    "type": "symfony-bundle",
+    "keywords": ["birthday", "calendar", "periodic", "symfony"],
+    "authors": [
+        {
+            "name": "Alexis Urien",
+            "email": "alexis.urien@free.fr"
+        }
+    ],
+    "require": {
+        "axi/mycalendar": "^1.0.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Axi\\MyCalendarBundle\\": "src/"
+        }
+    }
+}
