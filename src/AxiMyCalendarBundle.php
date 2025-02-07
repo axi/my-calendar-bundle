@@ -5,17 +5,21 @@ namespace Axi\MyCalendarBundle;
 use Axi\MyCalendar\Recipe\RecipeInterface;
 use Axi\MyCalendar\Service\CalendarService;
 use Axi\MyCalendarBundle\DependencyInjection\Compiler\InjectRecipesPass;
+use Composer\InstalledVersions;
 use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
 
-/**
- * @todo: can the vendor dir be not /vendor ? composer https://getcomposer.org/doc/06-config.md#vendor-dir says yes
- */
 class AxiMyCalendarBundle extends AbstractBundle
 {
     public const RECIPE_TAG = 'axi_my_calendar.recipe';
+
+    private string $myCalendarPath;
+
+    public function __construct() {
+        $this->myCalendarPath = InstalledVersions::getInstallPath('axi/mycalendar');
+    }
 
     public function configure(DefinitionConfigurator $definition): void
     {
@@ -37,7 +41,7 @@ class AxiMyCalendarBundle extends AbstractBundle
         // Declare vendor recipes to Sf
         $container->services()->load(
             'Axi\\MyCalendar\\Recipe\\',
-            '%kernel.project_dir%/vendor/axi/mycalendar/src/Recipe/*'
+            $this->myCalendarPath . '/src/Recipe/*'
         )->autoconfigure();
 
         // Register tagging of every RecipeInterface
@@ -64,7 +68,7 @@ class AxiMyCalendarBundle extends AbstractBundle
             [
                 'translator' => [
                     'paths' => [
-                        '%kernel.project_dir%/vendor/axi/mycalendar/translations',
+                        $this->myCalendarPath . '/translations',
                     ],
                 ],
             ]
