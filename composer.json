@@ -11,7 +11,7 @@
         }
     ],
     "require": {
-        "axi/mycalendar": "^1.0.0"
+        "axi/mycalendar": "^1.1.0"
     },
     "autoload": {
         "psr-4": {
