@@ -24,8 +24,15 @@ class InjectRecipesPass implements CompilerPassInterface
         foreach ($container->findTaggedServiceIds(AxiMyCalendarBundle::RECIPE_TAG) as $id => $tags) {
             $recipes[$id] = new Reference($id);
         }
-
         // Inject the found classes
         $definition->addMethodCall('setRecipes', [$recipes]);
+
+        // find all service IDs with the AxiMyCalendarBundle::RENDERER_TAG tag
+        $renderers = [];
+        foreach ($container->findTaggedServiceIds(AxiMyCalendarBundle::RENDERER_TAG) as $id => $tags) {
+            $renderers[$id] = new Reference($id);
+        }
+        // Inject the found classes
+        $definition->addMethodCall('setRenderers', [$renderers]);
     }
 }

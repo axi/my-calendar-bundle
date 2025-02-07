@@ -3,6 +3,7 @@
 namespace Axi\MyCalendarBundle;
 
 use Axi\MyCalendar\Recipe\RecipeInterface;
+use Axi\MyCalendar\Renderer\RendererInterface;
 use Axi\MyCalendar\Service\CalendarService;
 use Axi\MyCalendarBundle\DependencyInjection\Compiler\InjectRecipesPass;
 use Composer\InstalledVersions;
@@ -14,6 +15,7 @@ use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
 class AxiMyCalendarBundle extends AbstractBundle
 {
     public const RECIPE_TAG = 'axi_my_calendar.recipe';
+    public const RENDERER_TAG = 'axi_my_calendar.renderer';
 
     private string $myCalendarPath;
 
@@ -48,6 +50,16 @@ class AxiMyCalendarBundle extends AbstractBundle
         $builder
             ->registerForAutoconfiguration(RecipeInterface::class)
             ->addTag(self::RECIPE_TAG)
+        ;
+
+        // Declare vendor renderers to Sf
+        $container->services()->load(
+            'Axi\\MyCalendar\\Renderer\\',
+            $this->myCalendarPath . '/src/Renderer/*'
+        )->autoconfigure();
+        $builder
+            ->registerForAutoconfiguration(RendererInterface::class)
+            ->addTag(self::RENDERER_TAG)
         ;
 
         // Declare CalendarService for autowiring, using potential config values
