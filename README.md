@@ -107,7 +107,7 @@ class NowRecipe extends Recipe
         $event = new Event(
             new \DateTimeImmutable()
         );
-        $event->setSummary("now");
+        $event->setSummary(new TranslatableMessage('Now'));
         $event->setSourceRecipe(self::class);
 
         return [$event];
