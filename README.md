@@ -45,13 +45,24 @@ return [
 axi_my_calendar:
     # Select only certain recipes, use a list of FQDN recipes class names
     only_recipes:
-#        - Axi\MyCalendar\Recipe\Now
-#        - Axi\MyCalendar\Recipe\MillionMinutes
+#        - Axi\MyCalendar\Recipe\NowRecipe
+#        - Axi\MyCalendar\Recipe\MillionMinutesRecipe
 #        - App\NowRecipe
+
     # Exclude certain recipes from the provided ones, use a list of FQDN recipes class names
     except_recipes:
-#        - Axi\MyCalendar\Recipe\PlanetsRevolutions
+#        - Axi\MyCalendar\Recipe\PlanetsRevolutionsRecipe
 
+    # Configure Recipe rendering, allowing to prevent / allow some recipes to be rendered with certain renderers
+    recipe_rendering:
+        # Allows only the specified renderers
+        only:
+
+        # Allows all available renderers but the ones listed here
+        exclude:
+            Axi\MyCalendar\Recipe\NowRecipe:
+                - Axi\MyCalendar\Renderer\JsonRenderer
+                - Axi\MyCalendar\Renderer\IcalRenderer
 ```
 
 ## Usage
@@ -79,7 +90,7 @@ class MyController extends AbstractController {
     ): Response {
         $birthdate = new DateTimeImmutable('1984-01-12');
 
-        $events = $calendarService->getEventsFromDate($birthdate);
+        $events = $calendarService->getEvents($birthdate);
 
         dump($events);
         return new Response();
@@ -88,7 +99,7 @@ class MyController extends AbstractController {
 ```
 
 ### Add new recipes
-Create a new class that extends ```Axi\MyCalendar\Recipe\Recipe``` or at least implements ```Axi\MyCalendar\Recipe\RecipeInterface```.  
+Create a new class that extends ```Axi\MyCalendar\Recipe\AbstractRecipe``` or at least implements ```Axi\MyCalendar\Recipe\RecipeInterface```.  
 It will be automaticaly added to ```CalendarService``` recipes.
 
 ```php
@@ -96,11 +107,11 @@ It will be automaticaly added to ```CalendarService``` recipes.
 
 namespace App;
 
-use Axi\MyCalendar\Recipe\Recipe;
+use Axi\MyCalendar\Recipe\AbstractRecipe;
 use Axi\MyCalendar\Event;
 use Symfony\Component\Translation\TranslatableMessage;
 
-class NowRecipe extends Recipe
+class NowRecipe extends AbstractRecipe
 {
     public function getEvents(\DateTimeImmutable $basedOn): array
     {

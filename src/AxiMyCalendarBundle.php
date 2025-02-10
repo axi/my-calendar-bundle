@@ -33,8 +33,27 @@ class AxiMyCalendarBundle extends AbstractBundle
                 ->arrayNode('except_recipes')
                     ->scalarPrototype()->end()
                 ->end()
+                ->arrayNode('recipe_rendering')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->arrayNode('only')
+                            ->useAttributeAsKey('name')
+                            ->arrayPrototype()
+                                ->performNoDeepMerging()
+                                ->scalarPrototype()->end()
+                            ->end()
+                        ->end()
+                        ->arrayNode('exclude')
+                            ->useAttributeAsKey('name')
+                                ->arrayPrototype()
+                                    ->performNoDeepMerging()
+                                    ->scalarPrototype()->end()
+                                ->end()
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end()
             ->end()
-        ->end()
         ;
     }
 
@@ -69,11 +88,15 @@ class AxiMyCalendarBundle extends AbstractBundle
             // Applies from found configuration
             ->call('setOnlyRecipes', [$config['only_recipes']])
             ->call('setExceptRecipes', [$config['except_recipes']])
+            ->call('setRenderingConfig', [$config['recipe_rendering']])
         ;
     }
 
     public function prependExtension(ContainerConfigurator $container, ContainerBuilder $builder): void
     {
+        // prepend config from the library
+        $container->import($this->myCalendarPath . '/config/recipe_rendering.yaml');
+
         // Add library translation path to translator pathes
         $builder->prependExtensionConfig(
             'framework',
