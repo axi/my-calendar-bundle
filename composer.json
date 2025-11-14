@@ -11,7 +11,7 @@
         }
     ],
     "require": {
-        "axi/mycalendar": "^2.0.0",
+        "axi/mycalendar": "^2.2.0",
         "composer-runtime-api": "^2.1"
     },
     "autoload": {
